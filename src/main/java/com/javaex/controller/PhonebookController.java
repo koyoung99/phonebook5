@@ -2,6 +2,7 @@ package com.javaex.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,37 +11,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.javaex.dao.PhonebookDao;
+import com.javaex.service.PhonebookService;
 import com.javaex.vo.PersonVo;
 
 @Controller
 // servlet은 doget()이 모든역할 , class는 기능당 하나의 메소드를 가짐.
 public class PhonebookController {
 
+	// 메모리에 올려줘
+	@Autowired
+	private PhonebookService phonebookService;
+
 	// 삭제
-	@RequestMapping(value="/phone/delete", method= {RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/phone/delete", method = { RequestMethod.GET, RequestMethod.POST })
 	public String delete(@RequestParam("no") int no) {
 		System.out.println("PhonebookController>delete()");
-		
+
 		System.out.println(no);
-		
-		PhonebookDao phonebookDao=new PhonebookDao();
-		phonebookDao.personDelete(no);
-		
+
+		phonebookService.exeDelete(no);
+
 		return "redirect:/phone/list";
 	}
-	
-	
+
 	// 수정폼
 	@RequestMapping(value = "/phone/modifyform", method = { RequestMethod.GET, RequestMethod.POST })
 	public String modifyForm(@RequestParam(value = "no") int no, Model model) {
 
 		System.out.println("PhonebookController>modifyForm()");
 
-		// 메모리에 올리기
-		PhonebookDao phonebookDao = new PhonebookDao();
-		PersonVo personVo = phonebookDao.personSelectOne(no);
-
-		System.out.println(personVo);
+		PersonVo personVo = phonebookService.exeModifyForm(no);
 
 		model.addAttribute("personVo", personVo);
 
@@ -56,9 +56,8 @@ public class PhonebookController {
 
 		System.out.println(personVo);
 
-		PhonebookDao phonebookDao = new PhonebookDao();
-
-		phonebookDao.personUpdate(personVo);
+		// PhonebookService phonebookService = new PhonebookService();
+		phonebookService.exeModify(personVo);
 
 		return "redirect:/phone/list";
 	}
@@ -87,11 +86,8 @@ public class PhonebookController {
 		// vo로 묶기
 		PersonVo personVo = new PersonVo(name, hp, company);
 
-		// dao를 메모리에 올리기
-		PhonebookDao phonebookDao = new PhonebookDao();
-
-		// dao.personInsert(vo) 저장하기
-		phonebookDao.personInsert(personVo);
+		// PhonebookService phonebookService = new PhonebookService();
+		phonebookService.exeWrite(personVo);
 
 		// list로 redirect
 		return "redirect:/phone/list";
@@ -106,12 +102,12 @@ public class PhonebookController {
 
 		System.out.println(personVo.toString());
 
-		// dao를 메모리에 올리기
-		PhonebookDao phonebookDao = new PhonebookDao();
+		// 어플리케이이션 아키텍쳐
+		// service를 메모리에 올리고, service의 메소드 사용
+		// PhonebookService phonebookService = new PhonebookService();
+		phonebookService.exeWrite(personVo);
 
-		// dao.personInsert(vo) 저장하기
-		phonebookDao.personInsert(personVo);
-
+		// 리스트로 리다이렉트
 		return "redirect:/phone/list";
 
 	}
@@ -120,10 +116,10 @@ public class PhonebookController {
 	@RequestMapping(value = "/phone/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public String list(Model model) {
 		System.out.println("phonebookController.list()");
-
-		PhonebookDao phonebookDao = new PhonebookDao();
-
-		List<PersonVo> personList = phonebookDao.personSelect();
+		
+		// 자동연결
+		// PhonebookService phonebookService = new PhonebookService();
+		List<PersonVo> personList = phonebookService.exeList();
 
 		model.addAttribute("pList", personList);
 
