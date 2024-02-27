@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 
 <!DOCTYPE html>
@@ -31,8 +32,8 @@
 				<td>${personVo.company }</td>
 			</tr>
 			<tr>
-				<td><a href="">[삭제]</a></td>
-				<td><a href="">[수정]</a></td>
+				<td><a href="/phonebook5/phone/delete?no=${personVo.personId }">${personVo.personId} [삭제]</a></td>
+				<td><a href="/phonebook5/phone/modifyform?no=${personVo.personId}">${personVo.personId} [수정]</a></td>
 			</tr>
 
 		</table>
@@ -42,7 +43,7 @@
 
 
 
-	<a href="/phone/writeform">추가번호 등록</a>
+	<a href="/phonebook5/phone/writeform">추가번호 등록</a>
 
 
 
